@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Ứng dụng phân lớp Iris</title>
+</head>
+
+<body>
+    <h1>Ứng dụng phân lớp Iris</h1>
+    <form id="predict-form">
+        <label>Chiều dài đài hoa (sepal length): <input type="text" id="sepal_length" name="sepal_length"></label><br>
+        <label>Chiều rộng đài hoa (sepal width): <input type="text" id="sepal_width" name="sepal_width"></label><br>
+        <label>Chiều dài cánh hoa (petal length): <input type="text" id="petal_length" name="petal_length"></label><br>
+        <label>Chiều rộng cánh hoa (petal width): <input type="text" id="petal_width" name="petal_width"></label><br>
+        <button type="button" onclick="predict()">Dự đoán</button>
+    </form>
+    <p id="result"></p>
+
+    <script>
+        function predict() {
+            const formData = {
+                sepal_length: document.getElementById('sepal_length').value,
+                sepal_width: document.getElementById('sepal_width').value,
+                petal_length: document.getElementById('petal_length').value,
+                petal_width: document.getElementById('petal_width').value
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('result').textContent = data.error;
+                    } else {
+                        document.getElementById('result').textContent = 'Loài dự đoán: ' + data.prediction;
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>
